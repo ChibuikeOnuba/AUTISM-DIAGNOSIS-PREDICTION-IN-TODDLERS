@@ -73,10 +73,10 @@ The system implements and compares four machine learning algorithms:
 - **AUC Score**: 59.35%
 
 ### 4. **Naive Bayes**
-- **F1-Score**: [Add your scores]
-- **Precision**: [Add your scores]
-- **Recall**: [Add your scores]
-- **AUC Score**: [Add your scores]
+- **F1-Score**: 6.96%
+- **Precision**: 3.64%
+- **Recall**: 80.0%
+- **AUC Score**: 55.58%
 
 **Best Performing Model**: XGBoost with 76.50% F1-Score
 
@@ -105,8 +105,8 @@ The system implements and compares four machine learning algorithms:
 
 ### Step 1: Clone Repository
 ```bash
-git clone https://github.com/yourusername/autism-diagnosis-prediction-toddlers.git
-cd autism-diagnosis-prediction-toddlers
+git clone https://github.com/ChibuikeOnuba/AUTISM-DIAGNOSIS-PREDICTION-IN-TODDLERS.git
+cd AUTISM-DIAGNOSIS-PREDICTION-IN-TODDLERS
 ```
 
 ### Step 2: Create Virtual Environment (Recommended)
@@ -175,7 +175,7 @@ The models were evaluated using cross-validation and the following metrics:
 | XGBoost | **76.50%** | **75.45%** | 77.57% | 62.82% |
 | Random Forest | 74.29% | 70.91% | **78.00%** | **64.52%** |
 | Logistic Regression | 64.52% | 54.55% | 78.95% | 59.35% |
-| Naive Bayes | [TBD] | [TBD] | [TBD] | [TBD] |
+| Naive Bayes | 6.96% | 3.64% | 80.0% | 55.58% |
 
 ### Key Insights:
 - **XGBoost** provides the best overall performance with balanced precision and recall
@@ -246,9 +246,9 @@ If the tool indicates potential ASD traits:
 
 ## 📞 Support & Contact
 
-- **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/yourusername/autism-diagnosis-prediction-toddlers/issues)
+- **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/ChibuikeOnuba/AUTISM-DIAGNOSIS-PREDICTION-IN-TODDLERS/issues)
 - **Documentation**: Check the `docs/` folder for additional resources
-- **Email**: [your.email@example.com]
+- **Email**: [onubawinner042@gmail.com]
 
 ## 📜 License
 
