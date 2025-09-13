@@ -64,7 +64,8 @@ def load_models():
     model_files = {
         'Random Forest': 'saved_models/random_forest_pipeline.joblib',
         'Logistic Regression': 'saved_models/logistic_regression_pipeline.joblib',
-        'XGBoost': 'saved_models/xgboost_pipeline.joblib'
+        'XGBoost': 'saved_models/xgboost_pipeline.joblib',
+        'Naive Bayes': 'saved_models/naive_bayes_pipeline.joblib'
     }
     
     for name, path in model_files.items():
@@ -123,8 +124,8 @@ def create_input_form(feature_info):
         inputs['Age'] = st.sidebar.slider(
             "Age",
             min_value=1,
-            max_value=100,
-            value=25,
+            max_value=5,
+            value=1,
             help="Age of the individual being assessed"
         )
     
@@ -204,12 +205,12 @@ def display_model_performance(performance_data):
         # Create performance comparison chart
         fig = make_subplots(
             rows=2, cols=2,
-            subplot_titles=('Accuracy', 'Precision', 'Recall', 'F1-Score'),
+            subplot_titles=('F1-Score', 'Precision', 'Recall', 'AUC Score'),
             specs=[[{"secondary_y": False}, {"secondary_y": False}],
                    [{"secondary_y": False}, {"secondary_y": False}]]
         )
         
-        metrics = ['accuracy', 'precision', 'recall', 'f1_score']
+        metrics = ['f1_score', 'precision', 'recall', 'auc_score']
         positions = [(1, 1), (1, 2), (2, 1), (2, 2)]
         colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12']
         
