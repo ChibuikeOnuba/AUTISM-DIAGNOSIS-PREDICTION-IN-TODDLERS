@@ -35,9 +35,39 @@ app.add_middleware(
 
 security = HTTPBearer(auto_error=False)
 
+    
+"""Load models and feature information at startup"""
+models = {}
+feature_info = None
+start_time = datetime.now()
+
+@app.on_event("startup")
+async def load_models():
+    global models, feature_info
+
+    try:
+        model_files = {
+            'random_forest': '../saved_models/random_forest_pipeline.joblib',
+            'logistic_regression': '../saved_models/logistic_regression_pipeline.joblib',
+            'xgboost': '../saved_models/xgboost_pipeline.joblib',
+            'naive_bayes': '../saved_models/naive_bayes_pipeline.joblib'
+        }
+
+        for name, path in model_files.items():
+            if os.path.exists(path):
+                models[name] = joblib.load(path)
+                logger.info(f"{name} model loaded successfully")
+            else:
+                logger.warning(f"Model file not found: {path}")
+        logger.info(f"{len(models)} Models loaded successfully")
+
+    except Exception as e:
+        logger.error(f"Error loading models: {str(e)}")
+        raise e
+
+
+"""Create prediction input model"""
 @app.get("/")
-
-
 
 class PredictionInput(BaseModel):
     A10: int = Field(..., ge=0, le=1, description="Gets upset by minor changes in routine (0=No, 1=Yes)")
@@ -66,3 +96,63 @@ class PredictionInput(BaseModel):
 
 def read_root():
     return PredictionInput
+
+def get_risk_level(Confidence: float, prediction:int) -> str:
+    if "prediction == 0":
+        return "Low"
+    else:
+        if confidence>= 0.8:
+            return "High"
+        elif confidence>= 0.5:
+            return "Medium"
+        else:
+            return "Low"
+
+def get_recommendations(prediction: int, risl_level: str) -> list:
+    if prediction == 1:
+        if risk_level == "High":
+            return [
+                "Consult with a pediatrician immediately",
+                "Schedule comprehensive autism evaluation",
+                "Consider early intervention programs",
+                "Document behavioral observations",
+                "Seek support from autism specialists"
+            ]
+        elif risk_level == "Moderate":
+            return [
+                "Schedule follow-up with pediatrician",
+                "Monitor child's development closely",
+                "Consider developmental screening",
+                "Maintain regular check-ups"
+            ]
+    else:
+        return [
+            "Continue regular developmental monitoring",
+            "Maintain routine pediatric check-ups", 
+            "Support healthy development activities",
+            "Stay aware of developmental milestones"
+        ]
+
+"""_______________SECURITY_______________"""
+async def verify_api_key(credentials: HTTPAuthorizationCredentials = Depends(security)) -> str:
+    api_key = credentials.credentials
+    # in production, you would want to verify the API key against a database
+    if credentials:
+        return credentials.credentials
+    return "anonymous"    
+
+@app.get("/", response_model = Dict[str, Any])
+async def root():
+
+    return {
+        "message": "Autism Prediction API",
+        "version": "1.0.0",
+        "status": "active",
+        "endpoints": {
+            "predict": "/predict",
+            "health": "/health",
+            "models": "/models",
+            "docs": "/docs"
+        },
+        "disclaimer": "This API is for educational purposes only and should not be used as a substitute for professional medical diagnosis."
+    }
