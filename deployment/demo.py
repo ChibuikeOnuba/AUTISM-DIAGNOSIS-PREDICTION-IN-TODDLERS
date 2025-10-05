@@ -75,7 +75,7 @@ class PredictionInput(BaseModel):
     Ethnicity: str = Field(..., description="Ethnic background")
     Jaundice: int = Field(..., ge=0, le=1, description="Was your child/you born with jaundice? (0=No, 1=Yes)")
     Age: int = Field(..., ge=0, le=6, description="Age in Years")
-    Who_completed_the_test: str = Field(...,alias="Who_completed_the_test", description="Who completed the test (Parent/Child)")
+    Who_completed_the_test: str = Field(...,alias="Who completed the test", description="Who completed the test (Parent/Child)")
     family_member_with_ASD: int = Field(..., ge=0, le=1, description="Does your family have a member with autism? (0=No, 1=Yes)")
     Case_No: Optional[int] = Field(default=1, description="Case number for reference")
 
@@ -104,11 +104,11 @@ def get_risk_level(Confidence: float, prediction:int) -> str:
         if confidence>= 0.8:
             return "High"
         elif confidence>= 0.5:
-            return "Medium"
+            return "Moderate"
         else:
             return "Low"
 
-def get_recommendations(prediction: int, risl_level: str) -> list:
+def get_recommendations(prediction: int, risk_level: str) -> list:
     if prediction == 1:
         if risk_level == "High":
             return [
@@ -141,18 +141,3 @@ async def verify_api_key(credentials: HTTPAuthorizationCredentials = Depends(sec
         return credentials.credentials
     return "anonymous"    
 
-@app.get("/", response_model = Dict[str, Any])
-async def root():
-
-    return {
-        "message": "Autism Prediction API",
-        "version": "1.0.0",
-        "status": "active",
-        "endpoints": {
-            "predict": "/predict",
-            "health": "/health",
-            "models": "/models",
-            "docs": "/docs"
-        },
-        "disclaimer": "This API is for educational purposes only and should not be used as a substitute for professional medical diagnosis."
-    }
