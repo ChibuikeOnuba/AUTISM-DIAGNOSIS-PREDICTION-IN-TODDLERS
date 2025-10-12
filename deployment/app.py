@@ -1,3 +1,5 @@
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -44,8 +46,7 @@ class PredictionInput(BaseModel):
     Jaundice: int = Field(..., ge=0, le=1, description="Born with jaundice (0=No, 1=Yes)")
     Family_mem_with_ASD: int = Field(..., ge=0, le=1, description="Family member with ASD (0=No, 1=Yes)")
     Who_completed_the_test: str = Field(..., alias="Who completed the test", description="Who completed the test")
-    Age: int = Field(..., ge=1, le=5, description="Age of the child")
-    Case_No: Optional[int] = Field(default=1, description="Case number for reference")
+    Age: int = Field(..., ge=1, le=3, description="Age of the child")
     
     class Config:
         allow_population_by_field_name = True
@@ -58,7 +59,6 @@ class PredictionInput(BaseModel):
                 "Family_mem_with_ASD": 0,
                 "Who completed the test": "family member",
                 "Age": 3,
-                "Case_No": 1
             }
         }
 
@@ -94,10 +94,10 @@ async def load_models():
     
     try:
         model_files = {
-            'random_forest': 'saved_models/random_forest_pipeline.joblib',
-            'logistic_regression': 'saved_models/logistic_regression_pipeline.joblib',
-            'xgboost': 'saved_models/xgboost_pipeline.joblib',
-            'naive_bayes': 'saved_models/naive_bayes_pipeline.joblib'
+            'random_forest': '../saved_models/random_forest_pipeline.joblib',
+            'logistic_regression': '../saved_models/logistic_regression_pipeline.joblib',
+            'xgboost': '../saved_models/xgboost_pipeline.joblib',
+            'naive_bayes': '../saved_models/naive_bayes_pipeline.joblib'
         }
         
         for name, path in model_files.items():
@@ -147,6 +147,12 @@ def get_recommendations(prediction: int, risk_level: str) -> list:
                 "Monitor child's development closely",
                 "Consider developmental screening",
                 "Maintain regular check-ups"
+            ]
+        else:  # Low risk but prediction == 1
+            return [
+                "Monitor child's development closely",
+                "Schedule follow-up screening",
+                "Maintain regular pediatric check-ups"
             ]
     else:
         return [
@@ -317,20 +323,26 @@ async def get_analytics(api_key: str = Depends(verify_api_key)):
 # Error handlers
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request, exc):
-    return {
-        "error": "HTTP Exception",
-        "message": exc.detail,
-        "timestamp": datetime.now().isoformat()
-    }
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "error": "HTTP Exception",
+            "message": exc.detail,
+            "timestamp": datetime.now().isoformat()
+        }
+    )
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request, exc):
     logger.error(f"Unhandled exception: {str(exc)}")
-    return {
-        "error": "Internal Server Error",
-        "message": "An unexpected error occurred",
-        "timestamp": datetime.now().isoformat()
-    }
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": "Internal Server Error",
+            "message": "An unexpected error occurred",
+            "timestamp": datetime.now().isoformat()
+        }
+    )
 
 if __name__ == "__main__":
     # For local development
