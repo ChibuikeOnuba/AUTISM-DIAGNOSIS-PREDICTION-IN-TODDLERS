@@ -1,5 +1,0 @@
-Model,f1_score,precision,recall,auc_score
-Random Forest,74.29,70.91,78.0,64.52
-Logistic Regression,64.52,54.55,78.95,59.35
-XGBoost,76.5,75.45,77.57,62.82
-Naive Bayes,6.96,3.64,80.0,55.58   
