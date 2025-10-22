@@ -94,10 +94,10 @@ async def load_models():
     
     try:
         model_files = {
-            'random_forest': '../saved_models/random_forest_pipeline.joblib',
-            'logistic_regression': '../saved_models/logistic_regression_pipeline.joblib',
-            'xgboost': '../saved_models/xgboost_pipeline.joblib',
-            'naive_bayes': '../saved_models/naive_bayes_pipeline.joblib'
+            'random_forest': './saved_models/random_forest_pipeline.joblib',
+            'logistic_regression': './saved_models/logistic_regression_pipeline.joblib',
+            'xgboost': './saved_models/xgboost_pipeline.joblib',
+            'naive_bayes': './saved_models/naive_bayes_pipeline.joblib'
         }
         
         for name, path in model_files.items():
@@ -183,6 +183,7 @@ async def root():
             "predict": "/predict",
             "health": "/health",
             "models": "/models",
+            "batch_predict": "/batch_predict",
             "docs": "/docs"
         },
         "disclaimer": "This tool is for screening purposes only and should not replace professional medical diagnosis."
