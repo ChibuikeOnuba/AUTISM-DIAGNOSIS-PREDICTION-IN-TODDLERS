@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs/
+*.pdf
+*.docx
+
+# Data files (if large datasets)
+*.csv
+*.xlsx
+*.jpg
+*.png
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AWS and deployment
+aws-task-definition.json
+deploy.sh
+infrastructure/
+
+# Testing
+test.py
+tests/
+*.test.py
+
+# Logs
+*.log
